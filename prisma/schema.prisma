@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Universe {
+  id          String   @id @default(cuid())
+  name        String
+  season      String
+  universeSeed String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  matches     Match[]
+}
+
+model Match {
+  id          String   @id @default(cuid())
+  fixtureId   String
+  universeId  String
+  homeId      String
+  awayId      String
+  homeScore   Int
+  awayScore   Int
+  eventLog    Json
+  matchReport Json
+  createdAt   DateTime @default(now())
+  universe    Universe @relation(fields: [universeId], references: [id])
+}
+
+model Club {
+  id          String   @id @default(cuid())
+  name        String
+  country     String
+  competitionId String
+  stadium     Json
+  players     Json
+}
+
+model Competition {
+  id          String   @id @default(cuid())
+  name        String
+  country     String
+  type        String
+  tier        Int
+  clubs       Json
+}
